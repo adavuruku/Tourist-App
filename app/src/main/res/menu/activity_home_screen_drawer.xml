@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item android:title="Tourist Options">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/oyo"
+                    android:icon="@drawable/ic_visibility"
+                    android:title="@string/oyo" />
+                <item
+                    android:id="@+id/ogun"
+                    android:icon="@drawable/ic_visibility"
+                    android:title="@string/ogun" />
+                <item
+                    android:id="@+id/favourite"
+                    android:icon="@drawable/ic_favoritecolor"
+                    android:title="@string/favourite" />
+                <item
+                    android:id="@+id/visited"
+                    android:icon="@drawable/ic_beenhere"
+                    android:title="@string/visit" />
+
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="App Options">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/about"
+                    android:icon="@drawable/ic_about"
+                    android:title="@string/about" />
+                <item
+                    android:id="@+id/close"
+                    android:title="@string/exit"
+                    android:orderInCategory="300"
+                    android:icon="@drawable/ic_logout"/>
+            </group>
+        </menu>
+    </item>
+
+</menu>

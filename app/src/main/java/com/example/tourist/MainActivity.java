@@ -2,43 +2,122 @@ package com.example.tourist;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 
+public class MainActivity extends AppCompatActivity  {
+    dbHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView kl = findViewById(R.id.text);
-        String cont = "<h4>International Institute of Tropical Agriculture  (IITA)</h4>\n" +
-                "<p>International Institute of Tropical Agriculture is located at Located at KM 40 Along The Old Oyo Road, PMB 5320, Oyo.</p>\n" +
-                "\n" +
-                "<p>Interested in Agricultural research? Or fun seeking? The international institute of Tropical Agriculture provides an avenue for those seeking to have fun or for those interested in Agricultural research.</p>\n" +
-                "\n" +
-                "<h4>Safety/Security</h4>\n" +
-                "<p>This is a very safe location.</p>\n" +
-                "\n" +
-                "<h4>What To Bring</h4>\n" +
-                "<p>Before heading to International Institute of Tropical Agriculture, here are some helpful things to take along with you:</p>\n" +
-                "<ol>\n" +
-                "    <li>Camera</li>\n" +
-                "    <li>Swimming gear</li>\n" +
-                "</ol>\n" +
-                "<h4>Things to do while at International Institute of Tropical Agriculture</h4>\n" +
-                "These are the following things you can do while you're here:\n" +
-                "<ol>\n" +
-                "    <li>Bird watching</li>\n" +
-                "    <li>Walking with the wild.</li>\n" +
-                "</ol>";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            kl.setText(Html.fromHtml(cont, Html.FROM_HTML_MODE_COMPACT));
-        } else {
-            kl.setText(Html.fromHtml(cont));
+        dbHelper = new dbHelper(this);
+
+        dbColumnList.oyoTab = new ArrayList<>();
+        dbColumnList.ogunTab = new ArrayList<>();
+
+        //check if the database file is existing
+        File database = this.getDatabasePath(dbHelper.DATABASE_NAME);
+
+        //if it has not copy it do this - copy it
+        if(false == database.exists()){
+            dbHelper.getReadableDatabase();
+            if(copyDatabase(this)){
+                Toast.makeText(this,"Copied",Toast.LENGTH_SHORT).show();
+                //load all the groups for tab
+                new LoadLocalData().execute();
+            }else{
+                Toast.makeText(this,"Not Copied",Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }else{
+            //db existing load all the groups for tab
+            new LoadLocalData().execute();
+        }
+    }
+
+    private boolean copyDatabase(Context context){
+        try {
+            InputStream inputStream =context.getAssets().open(dbHelper.DATABASE_NAME);
+            String outfilename = dbHelper.DBLOCATION + dbHelper.DATABASE_NAME;
+            OutputStream outputStream = new FileOutputStream(outfilename);
+            byte[] buff = new byte[1024];
+            int length = 0;
+            while((length = inputStream.read(buff))> 0){
+                outputStream.write(buff,0,length);
+            }
+            outputStream.flush();
+            outputStream.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    class LoadLocalData extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            Cursor cursor = dbHelper.getAllGroup(dbColumnList.oyoData.TABLE_NAME);
+            if(cursor.getCount()>0){
+                while (cursor.moveToNext()){
+                    dbColumnList.oyoTab.add(cursor.getString(cursor.getColumnIndex(dbColumnList.oyoData.COLUMN_RECORDCONTENTGROUP)));
+                }
+            }
+            cursor.close();
+
+            cursor = dbHelper.getAllGroup(dbColumnList.ogunData.TABLE_NAME);
+            if(cursor.getCount()>0){
+                while (cursor.moveToNext()){
+                    dbColumnList.ogunTab.add(cursor.getString(cursor.getColumnIndex(dbColumnList.ogunData.COLUMN_RECORDCONTENTGROUP)));
+                }
+            }
+            cursor.close();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(getApplication(),viewContent.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                    finish();
+                }
+            },5000);
+
+
+//            if(userID.equals("")){
+//                Intent intent = new Intent(getApplication(),LoginScreen.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.right_in, R.anim.left_out);
+//                finish();
+//            }else{
+//                Intent intent = new Intent(getApplication(), HomeScreen.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.right_in, R.anim.left_out);
+//                finish();
+//            }
+
         }
     }
 }
