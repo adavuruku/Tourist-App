@@ -13,11 +13,16 @@ import android.text.Html;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity  {
@@ -90,6 +95,58 @@ public class MainActivity extends AppCompatActivity  {
                 }
             }
             cursor.close();
+
+
+//            String json;
+//            InputStream is;
+//            try {
+//                is = getApplication().getAssets().open("oyo_data.json");
+//                int size = is.available();
+//                byte[] buffer = new byte[size];
+//                is.read(buffer);
+//                is.close();
+//
+//                json = new String(buffer, "UTF-8");
+//                JSONArray jsonarray = new JSONArray(json);
+//                for (int i = 0; i < jsonarray.length(); i++) {
+//                    JSONObject jsonobject = jsonarray.getJSONObject(i);
+//
+//                    dbHelper.updateTable(dbColumnList.oyoData.TABLE_NAME,
+//                            jsonobject.getString("id"),
+//                            jsonobject.getString("content"));
+//
+//                }
+//
+//
+//                is = getApplication().getAssets().open("ogun_data.json");
+//                size = is.available();
+//                buffer = new byte[size];
+//                is.read(buffer);
+//                is.close();
+//
+//                json = new String(buffer, "UTF-8");
+//                jsonarray = new JSONArray(json);
+//                for (int i = 0; i < jsonarray.length(); i++) {
+//                    JSONObject jsonobject = jsonarray.getJSONObject(i);
+//
+//                    dbHelper.updateTable(dbColumnList.ogunData.TABLE_NAME,
+//                            jsonobject.getString("id"),
+//                            jsonobject.getString("content"));
+//
+//                }
+//
+//
+////
+////
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+
+
             return null;
         }
         @Override
@@ -98,25 +155,14 @@ public class MainActivity extends AppCompatActivity  {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(getApplication(),viewContent.class);
+                    Intent intent = new Intent(getApplication(),OgunHome.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.left_out);
                     finish();
                 }
-            },5000);
+            },3000);
 
 
-//            if(userID.equals("")){
-//                Intent intent = new Intent(getApplication(),LoginScreen.class);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.right_in, R.anim.left_out);
-//                finish();
-//            }else{
-//                Intent intent = new Intent(getApplication(), HomeScreen.class);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.right_in, R.anim.left_out);
-//                finish();
-//            }
 
         }
     }

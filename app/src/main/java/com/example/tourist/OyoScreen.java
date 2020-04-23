@@ -67,7 +67,7 @@ public class OyoScreen extends Fragment {
             public void run() {
                 new loadData().execute();
             }
-        },3000);
+        },500);
         return  view;
     }
 
@@ -124,8 +124,14 @@ public class OyoScreen extends Fragment {
 
                 @Override
                 public void onImageClick(View v, int position) {
-                    String postid =  contentData.get(position).getTitle();
-                    Toast.makeText(getContext(), postid + " Favourite",Toast.LENGTH_SHORT).show();
+                    String postid =  contentData.get(position).getRecordId();
+//                    Toast.makeText(getContext(), postid + " Favourite",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(), viewContent.class);
+                    intent.putExtra("tipsId",postid);
+                    intent.putExtra("tableData",dbColumnList.oyoData.TABLE_NAME);
+                    intent.putExtra("FileData",dbColumnList.oyoFile.TABLE_NAME);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
                 }
             });
             contentAdapter.notifyDataSetChanged();

@@ -29,7 +29,6 @@
                 android:layout_height="wrap_content"
                 android:justificationMode="inter_word"
                 android:lineSpacingExtra="5dp"
-                android:minLines="2"
                 android:padding="16dp"
                 android:text="@string/oyo"
                 android:textColor="@color/colorWhite"
