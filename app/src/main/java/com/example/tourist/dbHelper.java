@@ -50,11 +50,37 @@ public class dbHelper extends SQLiteOpenHelper {
         database.update(tableName, cv, dbColumnList.oyoData.COLUMN_RECORDID + "= ?", new String[]{recordId});
     }
 
+    public void DeleteFavourite(String recordId, String tableName){
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(dbColumnList.oyoData.COLUMN_FAVOURITE, 0);
+        database.update(tableName, cv, dbColumnList.oyoData.COLUMN_RECORDID + "= ?", new String[]{recordId});
+    }
+
     public void UpdateVisited(String recordId, String tableName){
         SQLiteDatabase database = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(dbColumnList.oyoData.COLUMN_TRAVEL, 1);
         database.update(tableName, cv, dbColumnList.oyoData.COLUMN_RECORDID + "= ?", new String[]{recordId});
+    }
+
+    public void DeleteVisited(String recordId, String tableName){
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(dbColumnList.oyoData.COLUMN_TRAVEL, 0);
+        database.update(tableName, cv, dbColumnList.oyoData.COLUMN_RECORDID + "= ?", new String[]{recordId});
+    }
+
+    public Cursor getAllFavourite(String tableName){
+        SQLiteDatabase database = getReadableDatabase();
+        String sql = "SELECT * FROM "+tableName+ " WHERE favourite = 1";
+        return database.rawQuery(sql, null);
+    }
+
+    public Cursor getAllVisited(String tableName){
+        SQLiteDatabase database = getReadableDatabase();
+        String sql = "SELECT * FROM "+tableName+ " WHERE travel = 1";
+        return database.rawQuery(sql, null);
     }
 
     public Cursor getAllGroupData(String group,String tableName){
@@ -88,6 +114,5 @@ public class dbHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(dbColumnList.oyoData.COLUMN_RECORDCONTENT, recordContent);
         database.update(tableName, cv, dbColumnList.oyoData.COLUMN_RECORDID + " = ? ", new String[]{recordId});
-
     }
 }

@@ -19,6 +19,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -108,18 +109,39 @@ public class OyoScreen extends Fragment {
             contentAdapter = new contentAdapter( contentData, getContext(), new contentAdapter.OnItemClickListener() {
                 @Override
                 public void onVisitedClick(View v, int position) {
+                    ImageButton visited = (ImageButton)v;
                     String postid =  contentData.get(position).getRecordId();
                     String placevisit =  contentData.get(position).getTitle();
-                    dbHelper.UpdateVisited(postid,dbColumnList.ogunData.TABLE_NAME);
-                    Toast.makeText(getContext(),  "You Have Visit " +placevisit ,Toast.LENGTH_SHORT).show();
+                    if(contentData.get(position).getTravel().equals("1")){
+                        visited.setBackgroundResource(R.drawable.circle);
+                        dbHelper.DeleteVisited(postid,dbColumnList.oyoData.TABLE_NAME);
+                        contentData.get(position).setTravel("0");
+                        Toast.makeText(getContext(),  "Removed " +placevisit +" From Visited" ,Toast.LENGTH_SHORT).show();
+                    }else{
+                        visited.setBackgroundResource(R.drawable.circleselected);
+                        dbHelper.UpdateVisited(postid,dbColumnList.oyoData.TABLE_NAME);
+                        contentData.get(position).setTravel("1");
+                        Toast.makeText(getContext(),  "Added " +placevisit +" To Visited" ,Toast.LENGTH_SHORT).show();
+                    }
+
                 }
 
                 @Override
                 public void onFavouriteClick(View v, int position) {
+                    ImageButton favourite = (ImageButton)v;
                     String postid =  contentData.get(position).getRecordId();
                     String placevisit =  contentData.get(position).getTitle();
-                    dbHelper.UpdateFavourite(postid,dbColumnList.ogunData.TABLE_NAME);
-                    Toast.makeText(getContext(),  "You Choose " +placevisit + " As Favourite." ,Toast.LENGTH_SHORT).show();
+                    if(contentData.get(position).getFavourite().equals("1")){
+                        favourite.setBackgroundResource(R.drawable.circle);
+                        dbHelper.DeleteFavourite(postid,dbColumnList.oyoData.TABLE_NAME);
+                        contentData.get(position).setFavourite("0");
+                        Toast.makeText(getContext(),  "Removed " +placevisit +" From Favourite" ,Toast.LENGTH_SHORT).show();
+                    }else{
+                        favourite.setBackgroundResource(R.drawable.circleselected);
+                        dbHelper.UpdateFavourite(postid,dbColumnList.oyoData.TABLE_NAME);
+                        contentData.get(position).setFavourite("1");
+                        Toast.makeText(getContext(),  "Added " +placevisit +" To Favourite" ,Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override

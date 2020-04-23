@@ -44,5 +44,13 @@ public class myModels {
         public String getFavourite() {
             return favourite;
         }
+
+        public void setTravel(String travel) {
+            this.travel = travel;
+        }
+
+        public void setFavourite(String favourite) {
+            this.favourite = favourite;
+        }
     }
 }

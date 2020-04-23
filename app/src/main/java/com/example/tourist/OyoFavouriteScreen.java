@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class OgunScreen extends Fragment {
+public class OyoFavouriteScreen extends Fragment {
     List<myModels.contentModel> contentData;
     int post;
     String contentGroup;
@@ -34,13 +34,13 @@ public class OgunScreen extends Fragment {
     private contentAdapter contentAdapter;
     private OnFragmentInteractionListener mListener;
     dbHelper dbHelper;
-    public OgunScreen() {
+    public OyoFavouriteScreen() {
     }
 
-    public static OgunScreen getInstance(int position) {
+    public static OyoFavouriteScreen getInstance(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("pos", position);
-        OgunScreen tabFragment = new OgunScreen();
+        OyoFavouriteScreen tabFragment = new OyoFavouriteScreen();
         tabFragment.setArguments(bundle);
         return tabFragment;
 
@@ -55,7 +55,7 @@ public class OgunScreen extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ogun_screen, container, false);
+        View view = inflater.inflate(R.layout.fragment_oyo_favourite_screen, container, false);
         contentData = new ArrayList<>();
 
         recyclerView = view.findViewById(R.id.recycler_view);
@@ -77,7 +77,13 @@ public class OgunScreen extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             dbHelper = new dbHelper(getContext());
-            Cursor cursor = dbHelper.getAllGroupData(contentGroup, dbColumnList.ogunData.TABLE_NAME);
+            Cursor cursor;
+            if(post==0){
+                cursor = dbHelper.getAllFavourite(dbColumnList.ogunData.TABLE_NAME);
+            }else{
+                cursor = dbHelper.getAllVisited(dbColumnList.ogunData.TABLE_NAME);
+            }
+
             if(cursor.getCount()>0){
                 while (cursor.moveToNext()){
                     Cursor picsCursor = dbHelper.getAPics(cursor.getString(cursor.getColumnIndex(dbColumnList.ogunData.COLUMN_RECORDID)),
@@ -114,19 +120,15 @@ public class OgunScreen extends Fragment {
                     String placevisit =  contentData.get(position).getTitle();
                     if(contentData.get(position).getTravel().equals("1")){
                         visited.setBackgroundResource(R.drawable.circle);
-                        dbHelper.DeleteVisited(postid,dbColumnList.ogunData.TABLE_NAME);
+                        dbHelper.DeleteVisited(postid,dbColumnList.oyoData.TABLE_NAME);
                         contentData.get(position).setTravel("0");
                         Toast.makeText(getContext(),  "Removed " +placevisit +" From Visited" ,Toast.LENGTH_SHORT).show();
                     }else{
                         visited.setBackgroundResource(R.drawable.circleselected);
-                        dbHelper.UpdateVisited(postid,dbColumnList.ogunData.TABLE_NAME);
+                        dbHelper.UpdateVisited(postid,dbColumnList.oyoData.TABLE_NAME);
                         contentData.get(position).setTravel("1");
                         Toast.makeText(getContext(),  "Added " +placevisit +" To Visited" ,Toast.LENGTH_SHORT).show();
                     }
-
-
-
-
                 }
 
                 @Override
@@ -136,12 +138,12 @@ public class OgunScreen extends Fragment {
                     String placevisit =  contentData.get(position).getTitle();
                     if(contentData.get(position).getFavourite().equals("1")){
                         favourite.setBackgroundResource(R.drawable.circle);
-                        dbHelper.DeleteFavourite(postid,dbColumnList.ogunData.TABLE_NAME);
+                        dbHelper.DeleteFavourite(postid,dbColumnList.oyoData.TABLE_NAME);
                         contentData.get(position).setFavourite("0");
                         Toast.makeText(getContext(),  "Removed " +placevisit +" From Favourite" ,Toast.LENGTH_SHORT).show();
                     }else{
                         favourite.setBackgroundResource(R.drawable.circleselected);
-                        dbHelper.UpdateFavourite(postid,dbColumnList.ogunData.TABLE_NAME);
+                        dbHelper.UpdateFavourite(postid,dbColumnList.oyoData.TABLE_NAME);
                         contentData.get(position).setFavourite("1");
                         Toast.makeText(getContext(),  "Added " +placevisit +" To Favourite" ,Toast.LENGTH_SHORT).show();
                     }
@@ -150,11 +152,10 @@ public class OgunScreen extends Fragment {
                 @Override
                 public void onImageClick(View v, int position) {
                     String postid =  contentData.get(position).getRecordId();
-//                    Toast.makeText(getContext(), postid + " Favourite",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getActivity(), viewContent.class);
                     intent.putExtra("tipsId",postid);
-                    intent.putExtra("tableData",dbColumnList.ogunData.TABLE_NAME);
-                    intent.putExtra("FileData",dbColumnList.ogunFile.TABLE_NAME);
+                    intent.putExtra("tableData",dbColumnList.oyoData.TABLE_NAME);
+                    intent.putExtra("FileData",dbColumnList.oyoFile.TABLE_NAME);
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
                 }

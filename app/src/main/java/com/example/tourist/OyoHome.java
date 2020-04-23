@@ -77,27 +77,20 @@ public class OyoHome extends AppCompatActivity implements OyoScreen.OnFragmentIn
                 drawerLayout.closeDrawers();
                 switch (id) {
                     case R.id.favourite:
-//                        intent = new Intent(getApplicationContext(), DailyTips.class);
-//                        intent.putExtra("TABID","0");
-//                        startActivity(intent);
-//                        overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                        break;
                     case R.id.visited:
-//                        intent = new Intent(getApplicationContext(), MonthlyTips.class);
-//                        intent.putExtra("TABID","0");
-//                        startActivity(intent);
-//                        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                        intent = new Intent(getApplicationContext(), OyoFavourite.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.right_in, R.anim.left_out);
                         break;
                     case R.id.ogun:
                         intent = new Intent(getApplicationContext(), OgunHome.class);
                         startActivity(intent);
                         overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                        finish();
                         break;
                     case R.id.about:
-//                        intent = new Intent(getApplicationContext(), about.class);
-//                        startActivity(intent);
-//                        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                        intent = new Intent(getApplicationContext(), about.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.right_in, R.anim.left_out);
                         break;
                     case R.id.close:
                         finish();

@@ -50,8 +50,17 @@ public class contentAdapter extends RecyclerView.Adapter<contentAdapter.Recycler
             myModels.contentModel contact = contacts.get(g);
             holder.title.setText(contact.getTitle());
 
+
             Bitmap bitmap = BitmapFactory.decodeByteArray(contact.getBlobpics(), 0, contact.getBlobpics().length);
             holder.imageView.setImageBitmap(bitmap);
+
+            if(contact.getFavourite().equals("1")){
+                holder.favourite.setBackgroundResource(R.drawable.circleselected);
+            }
+
+            if(contact.getTravel().equals("1")){
+                holder.visited.setBackgroundResource(R.drawable.circleselected);
+            }
 
             if (position > prevpos) {
                 AnimationUtils.animate(holder, true);

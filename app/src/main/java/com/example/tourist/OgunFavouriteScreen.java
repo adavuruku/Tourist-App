@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class OgunScreen extends Fragment {
+public class OgunFavouriteScreen extends Fragment {
     List<myModels.contentModel> contentData;
     int post;
     String contentGroup;
@@ -34,13 +34,13 @@ public class OgunScreen extends Fragment {
     private contentAdapter contentAdapter;
     private OnFragmentInteractionListener mListener;
     dbHelper dbHelper;
-    public OgunScreen() {
+    public OgunFavouriteScreen() {
     }
 
-    public static OgunScreen getInstance(int position) {
+    public static OgunFavouriteScreen getInstance(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("pos", position);
-        OgunScreen tabFragment = new OgunScreen();
+        OgunFavouriteScreen tabFragment = new OgunFavouriteScreen();
         tabFragment.setArguments(bundle);
         return tabFragment;
 
@@ -55,7 +55,7 @@ public class OgunScreen extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ogun_screen, container, false);
+        View view = inflater.inflate(R.layout.fragment_ogun_favourite_screen, container, false);
         contentData = new ArrayList<>();
 
         recyclerView = view.findViewById(R.id.recycler_view);
@@ -77,7 +77,13 @@ public class OgunScreen extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             dbHelper = new dbHelper(getContext());
-            Cursor cursor = dbHelper.getAllGroupData(contentGroup, dbColumnList.ogunData.TABLE_NAME);
+            Cursor cursor;
+            if(post==0){
+                cursor = dbHelper.getAllFavourite(dbColumnList.ogunData.TABLE_NAME);
+            }else{
+                cursor = dbHelper.getAllVisited(dbColumnList.ogunData.TABLE_NAME);
+            }
+
             if(cursor.getCount()>0){
                 while (cursor.moveToNext()){
                     Cursor picsCursor = dbHelper.getAPics(cursor.getString(cursor.getColumnIndex(dbColumnList.ogunData.COLUMN_RECORDID)),
@@ -123,10 +129,6 @@ public class OgunScreen extends Fragment {
                         contentData.get(position).setTravel("1");
                         Toast.makeText(getContext(),  "Added " +placevisit +" To Visited" ,Toast.LENGTH_SHORT).show();
                     }
-
-
-
-
                 }
 
                 @Override
