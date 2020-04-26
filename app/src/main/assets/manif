@@ -27,17 +27,23 @@
         <activity
             android:name=".OgunHome"
             android:theme="@style/AppTheme.NoActionBar">
-
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchResultsActivity" />
         </activity>
         <activity
             android:name=".SearchResultsActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
         </activity>
         <activity
             android:name=".OyoHome"
             android:theme="@style/AppTheme.NoActionBar">
-
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchResultsActivity" />
         </activity>
         <activity
             android:name=".MainActivity"
@@ -55,3 +61,52 @@
     </application>
 
 </manifest>
+
+
+
+
+
+
+SearchActivity Result
+
+package com.example.tourist;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.SearchManager;
+import android.content.Intent;
+import android.os.Bundle;
+
+public class SearchResultsActivity extends AppCompatActivity {
+    String tableName;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search_results);
+
+        Bundle appData = getIntent().getBundleExtra(SearchManager.APP_DATA);
+        if (appData != null) {
+            tableName = appData.getString("tableName");
+        }
+
+        Intent intent = getIntent();
+        handleIntent(intent);
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(getIntent());
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            System.out.println(query + tableName);
+            //use the query to search your data somehow
+        }
+    }
+
+}

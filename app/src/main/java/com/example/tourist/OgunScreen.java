@@ -77,6 +77,7 @@ public class OgunScreen extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             dbHelper = new dbHelper(getContext());
+            dbHelper.openDataBase();
             Cursor cursor = dbHelper.getAllGroupData(contentGroup, dbColumnList.ogunData.TABLE_NAME);
             if(cursor.getCount()>0){
                 while (cursor.moveToNext()){
@@ -123,10 +124,6 @@ public class OgunScreen extends Fragment {
                         contentData.get(position).setTravel("1");
                         Toast.makeText(getContext(),  "Added " +placevisit +" To Visited" ,Toast.LENGTH_SHORT).show();
                     }
-
-
-
-
                 }
 
                 @Override
@@ -155,6 +152,7 @@ public class OgunScreen extends Fragment {
                     intent.putExtra("tipsId",postid);
                     intent.putExtra("tableData",dbColumnList.ogunData.TABLE_NAME);
                     intent.putExtra("FileData",dbColumnList.ogunFile.TABLE_NAME);
+                    intent.putExtra("acivity","ogunScreen");
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
                 }

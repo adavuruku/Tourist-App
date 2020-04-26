@@ -17,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.os.Handler;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -61,7 +62,7 @@ public class OyoFavouriteScreen extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-        contentGroup = dbColumnList.ogunTab.get(post);
+        contentGroup = dbColumnList.oyoTab.get(post);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -77,11 +78,12 @@ public class OyoFavouriteScreen extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             dbHelper = new dbHelper(getContext());
+            dbHelper.openDataBase();
             Cursor cursor;
             if(post==0){
-                cursor = dbHelper.getAllFavourite(dbColumnList.ogunData.TABLE_NAME);
+                cursor = dbHelper.getAllFavourite(dbColumnList.oyoData.TABLE_NAME);
             }else{
-                cursor = dbHelper.getAllVisited(dbColumnList.ogunData.TABLE_NAME);
+                cursor = dbHelper.getAllVisited(dbColumnList.oyoData.TABLE_NAME);
             }
 
             if(cursor.getCount()>0){
@@ -98,7 +100,7 @@ public class OyoFavouriteScreen extends Fragment {
                                 cursor.getString(cursor.getColumnIndex(dbColumnList.oyoData.COLUMN_RECORDCONTENTGROUP)),
                                 cursor.getString(cursor.getColumnIndex(dbColumnList.oyoData.COLUMN_TRAVEL)),
                                 cursor.getString(cursor.getColumnIndex(dbColumnList.oyoData.COLUMN_FAVOURITE)),
-                                picsCursor.getBlob(picsCursor.getColumnIndexOrThrow(dbColumnList.ogunFile.COLUMN_FILEDATA))
+                                picsCursor.getBlob(picsCursor.getColumnIndexOrThrow(dbColumnList.oyoFile.COLUMN_FILEDATA))
                         );
                         contentData.add(contentList);
                     }
@@ -156,6 +158,7 @@ public class OyoFavouriteScreen extends Fragment {
                     intent.putExtra("tipsId",postid);
                     intent.putExtra("tableData",dbColumnList.oyoData.TABLE_NAME);
                     intent.putExtra("FileData",dbColumnList.oyoFile.TABLE_NAME);
+                    intent.putExtra("acivity","oyoFavourite");
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
                 }

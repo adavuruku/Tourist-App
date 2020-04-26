@@ -3,10 +3,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="ogun">Ogun State</string>
-    <string name="oyo">Oyo State</string>
-    <string name="oyo_moto">Pace Setter State</string>
-    <string name="ogun_motor">Gateway State</string>
+    <string name="ogun">Ogun State.</string>
+    <string name="oyo">Oyo State.</string>
+    <string name="oyo_moto">The Pace Setter State.</string>
+    <string name="ogun_motor">The Gateway State.</string>
     <string name="favourite">Favourites</string>
     <string name="visit">Visited</string>
     <string name="search_hint">Search</string>

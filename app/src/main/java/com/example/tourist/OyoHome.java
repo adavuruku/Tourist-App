@@ -89,6 +89,7 @@ public class OyoHome extends AppCompatActivity implements OyoScreen.OnFragmentIn
                         break;
                     case R.id.about:
                         intent = new Intent(getApplicationContext(), about.class);
+                        intent.putExtra("tableName", "oyo_data");
                         startActivity(intent);
                         overridePendingTransition(R.anim.right_in, R.anim.left_out);
                         break;
@@ -116,36 +117,54 @@ public class OyoHome extends AppCompatActivity implements OyoScreen.OnFragmentIn
 
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.searchmenu, menu);
-        MenuItem searchItem = menu.findItem(R.id.search);
-
-        SearchManager searchManager = (SearchManager) OyoHome.this.getSystemService(Context.SEARCH_SERVICE);
-
-        SearchView searchView = null;
-        if (searchItem != null) {
-            searchView = (SearchView) searchItem.getActionView();
-        }
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(OyoHome.this.getComponentName()));
-        }
-        System.out.println("You Clicked");
-        return super.onCreateOptionsMenu(menu);
-    }
-
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        getMenuInflater().inflate(R.menu.searchmenu, menu);
+//        MenuItem searchItem = menu.findItem(R.id.search);
 //
-//        // Associate searchable configuration with the SearchView
-//        SearchManager searchManager =
-//                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView =
-//                (SearchView) menu.findItem(R.id.search).getActionView();
-//        searchView.setSearchableInfo(
-//                searchManager.getSearchableInfo(getComponentName()));
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 //
+//        SearchView searchView = null;
+//        if (searchItem != null) {
+//            searchView = (SearchView) searchItem.getActionView();
+//        }
+//        if (searchView != null) {
+//            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//            searchView.setIconifiedByDefault(false);
+//        }
 //        return super.onCreateOptionsMenu(menu);
 //    }
+//
+//
+//
+//    @Override
+//    public boolean onSearchRequested() {
+//        Bundle appData = new Bundle();
+//        appData.putString("tableName", "oyo_data");
+//        startSearch(null, false, appData, false);
+//        return true;
+//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.searchmenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Intent intent;
+        switch (id){
+            case R.id.search:
+                intent = new Intent(getApplicationContext(), SearchResultsActivity.class);
+                intent.putExtra("tableName", "oyo_data");
+                startActivity(intent);
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {

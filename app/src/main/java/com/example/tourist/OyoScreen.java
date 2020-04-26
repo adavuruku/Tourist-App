@@ -77,6 +77,7 @@ public class OyoScreen extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             dbHelper = new dbHelper(getContext());
+            dbHelper.openDataBase();
             Cursor cursor = dbHelper.getAllGroupData(contentGroup, dbColumnList.oyoData.TABLE_NAME);
             if(cursor.getCount()>0){
                 while (cursor.moveToNext()){
@@ -152,6 +153,7 @@ public class OyoScreen extends Fragment {
                     intent.putExtra("tipsId",postid);
                     intent.putExtra("tableData",dbColumnList.oyoData.TABLE_NAME);
                     intent.putExtra("FileData",dbColumnList.oyoFile.TABLE_NAME);
+                    intent.putExtra("acivity","oyoScreen");
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
                 }

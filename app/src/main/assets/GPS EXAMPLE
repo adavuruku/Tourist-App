@@ -19,7 +19,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -30,8 +29,8 @@ import android.widget.Toast;
 
 import com.google.android.material.appbar.SubtitleCollapsingToolbarLayout;
 
-public class viewContent extends AppCompatActivity  {
-    String tipsId, acivity, tableData, FileData, title, subtitle, body,visitStatus, favouriteStatus;
+public class viewContent extends AppCompatActivity implements LocationListener {
+    String tipsId, tableData, FileData, title, subtitle, body,visitStatus, favouriteStatus;
     TextView content;
     SubtitleCollapsingToolbarLayout stoolbar;
     dbHelper dbHelper;
@@ -48,7 +47,6 @@ public class viewContent extends AppCompatActivity  {
         tipsId = getIntent().getStringExtra("tipsId");
         tableData = getIntent().getStringExtra("tableData");
         FileData = getIntent().getStringExtra("FileData");
-        acivity = getIntent().getStringExtra("acivity");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -107,7 +105,6 @@ public class viewContent extends AppCompatActivity  {
         btnPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityCompat.requestPermissions(viewContent.this,new String[]{Manifest.permission.CALL_PHONE},24027);
                 String phone_id = tableData.equals("oyo_data") ? "tel:08037283852" : "tel:08103341344";
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse(phone_id));
@@ -126,18 +123,27 @@ public class viewContent extends AppCompatActivity  {
                 ActivityCompat.requestPermissions(viewContent.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},24323);
                 if ((ActivityCompat.checkSelfPermission(viewContent.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
                         && (ActivityCompat.checkSelfPermission(viewContent.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-                    Toast.makeText(getApplicationContext(),  "You have To Enable Either GPS or Connect to An Internet Source" ,Toast.LENGTH_LONG).show();
                     return;
                 }
-
-                Uri gmmIntentUri = Uri.parse("google.navigation:q="+ Uri.encode(title)+"&mode=d&avoid=tf");
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                mapIntent.setPackage("com.google.android.apps.maps");
-                if (mapIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(mapIntent);
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                Boolean isGpsEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                Boolean isNetworkEnable =locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                Location location = null;
+                if(isNetworkEnable){
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,6000,10,viewContent.this);
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    if(location!=null){
+                        startMap(location);
+                    }
+                }else if(isGpsEnable){
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,6000,10,viewContent.this);
+                    location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if(location!=null){
+                        startMap(location);
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(),  "You have To Enable Either GPS or Connect to An Internet Source" ,Toast.LENGTH_LONG).show();
                 }
-
             }
         });
 
@@ -165,12 +171,12 @@ public class viewContent extends AppCompatActivity  {
                     dbHelper.DeleteVisited(tipsId,tableData);
                     visitStatus = "0";
                     visited.setBackgroundResource(R.drawable.circle);
-                    Toast.makeText(getApplicationContext(),  "Removed " + title +" To Visited Places.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),  "Remove " + title +" To Visited Places.",Toast.LENGTH_SHORT).show();
                 }else{
                     dbHelper.UpdateVisited(tipsId,tableData);
                     visited.setBackgroundResource(R.drawable.circleselected);
                     visitStatus = "1";
-                    Toast.makeText(getApplicationContext(),  "Added " + title +" To Visited Places." ,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),  "Add " + title +" To Visited Places." ,Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -182,59 +188,48 @@ public class viewContent extends AppCompatActivity  {
                     dbHelper.DeleteFavourite(tipsId,tableData);
                     favouriteStatus="0";
                     favourite.setBackgroundResource(R.drawable.circle);
-                    Toast.makeText(getApplicationContext(),  "Removed " +title + " To Favourite." ,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),  "Remove " +title + " To Favourite." ,Toast.LENGTH_SHORT).show();
                 }else{
                     dbHelper.UpdateFavourite(tipsId,tableData);
                     favouriteStatus="1";
                     favourite.setBackgroundResource(R.drawable.circleselected);
-                    Toast.makeText(getApplicationContext(),  "Added " +title + " To Favourite." ,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),  "Add " +title + " To Favourite." ,Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
     }
 
+    public void startMap(Location location){
+        String currentLocation="geo:"+ latitude+", "+ longitude;
+//        System.out.println("start " + latitude + " - " + longitude);
+//        content.setText("start " + latitude + " - " + longitude);
+//        Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4192?q=" + Uri.encode(title));
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+ Uri.encode(title)+"&mode=d&avoid=tf");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        }
+    }
+    @Override
+    public void onLocationChanged(Location location) {
+         latitude = location.getLatitude();
+         longitude = location.getLongitude();
+    }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+    public void onStatusChanged(String provider, int status, Bundle extras) {
 
-            case android.R.id.home:
-                Intent intent;
-                if (acivity.equals("oyoScreen")){
-                    intent = new Intent(this, OyoHome.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }else if (acivity.equals("ogunScreen")){
-                    intent = new Intent(this, OgunHome.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }else if (acivity.equals("ogunHome")){
-                    intent = new Intent(this, OgunHome.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }else if (acivity.equals("ogunFavourite")){
-                    intent = new Intent(this, OgunFavourite.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }else if (acivity.equals("oyoFavourite")){
-                    intent = new Intent(this, OyoFavourite.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }else{
-                    intent = new Intent(this, SearchResultsActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }
+    }
 
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }

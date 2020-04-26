@@ -36,7 +36,7 @@ public class OyoFavourite extends AppCompatActivity implements OyoFavouriteScree
         setSupportActionBar(toolbar);
 //
         if(getSupportActionBar()!=null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
@@ -53,36 +53,22 @@ public class OyoFavourite extends AppCompatActivity implements OyoFavouriteScree
     }
 
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.searchmenu, menu);
-        MenuItem searchItem = menu.findItem(R.id.search);
 
-        SearchManager searchManager = (SearchManager) OyoFavourite.this.getSystemService(Context.SEARCH_SERVICE);
-
-        SearchView searchView = null;
-        if (searchItem != null) {
-            searchView = (SearchView) searchItem.getActionView();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, OyoHome.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(OyoFavourite.this.getComponentName()));
-        }
-        System.out.println("You Clicked");
-        return super.onCreateOptionsMenu(menu);
     }
 
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.searchmenu, menu);
-//
-//        // Associate searchable configuration with the SearchView
-//        SearchManager searchManager =
-//                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView =
-//                (SearchView) menu.findItem(R.id.search).getActionView();
-//        searchView.setSearchableInfo(
-//                searchManager.getSearchableInfo(getComponentName()));
-//
-//        return super.onCreateOptionsMenu(menu);
-//    }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {

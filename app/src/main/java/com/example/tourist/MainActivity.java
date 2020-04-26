@@ -34,47 +34,58 @@ public class MainActivity extends AppCompatActivity  {
 
         dbHelper = new dbHelper(this);
 
+        try {
+            dbHelper.createDataBase();
+            dbHelper.openDataBase();
+            new LoadLocalData().execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("weee" + e.getMessage());
+        }
+
         dbColumnList.oyoTab = new ArrayList<>();
         dbColumnList.ogunTab = new ArrayList<>();
 
-        //check if the database file is existing
-        File database = this.getDatabasePath(dbHelper.DATABASE_NAME);
+//        //check if the database file is existing
+//        File database = this.getDatabasePath(dbHelper.DATABASE_NAME);
+//
+//        //if it has not copy it do this - copy it
+//        if(false == database.exists()){
+////            dbHelper.getReadableDatabase();
+//            if(copyDatabase(this)){
+//                Toast.makeText(this,"Copied",Toast.LENGTH_SHORT).show();
+//                //load all the groups for tab
+//                new LoadLocalData().execute();
+//            }else{
+//                Toast.makeText(this,"Not Copied",Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//        }else{
+//            //db existing load all the groups for tab
+//            new LoadLocalData().execute();
+//        }
 
-        //if it has not copy it do this - copy it
-        if(false == database.exists()){
-            dbHelper.getReadableDatabase();
-            if(copyDatabase(this)){
-                Toast.makeText(this,"Copied",Toast.LENGTH_SHORT).show();
-                //load all the groups for tab
-                new LoadLocalData().execute();
-            }else{
-                Toast.makeText(this,"Not Copied",Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }else{
-            //db existing load all the groups for tab
-            new LoadLocalData().execute();
-        }
+
     }
 
-    private boolean copyDatabase(Context context){
-        try {
-            InputStream inputStream =context.getAssets().open(dbHelper.DATABASE_NAME);
-            String outfilename = dbHelper.DBLOCATION + dbHelper.DATABASE_NAME;
-            OutputStream outputStream = new FileOutputStream(outfilename);
-            byte[] buff = new byte[1024];
-            int length = 0;
-            while((length = inputStream.read(buff))> 0){
-                outputStream.write(buff,0,length);
-            }
-            outputStream.flush();
-            outputStream.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    private boolean copyDatabase(Context context){
+//        try {
+//            InputStream inputStream =context.getAssets().open(dbHelper.DATABASE_NAME);
+//            String outfilename = dbHelper.DBLOCATION + dbHelper.DATABASE_NAME;
+//            OutputStream outputStream = new FileOutputStream(outfilename);
+//            byte[] buff = new byte[1024];
+//            int length = 0;
+//            while((length = inputStream.read(buff))> 0){
+//                outputStream.write(buff,0,length);
+//            }
+//            outputStream.flush();
+//            outputStream.close();
+//            return true;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
     class LoadLocalData extends AsyncTask<String, Integer, String> {
 

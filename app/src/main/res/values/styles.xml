@@ -32,4 +32,8 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/colorWhite</item>
     </style>
+
+    <style name="searchTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
 </resources>

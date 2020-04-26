@@ -77,6 +77,7 @@ public class OgunFavouriteScreen extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             dbHelper = new dbHelper(getContext());
+            dbHelper.openDataBase();
             Cursor cursor;
             if(post==0){
                 cursor = dbHelper.getAllFavourite(dbColumnList.ogunData.TABLE_NAME);
@@ -157,6 +158,7 @@ public class OgunFavouriteScreen extends Fragment {
                     intent.putExtra("tipsId",postid);
                     intent.putExtra("tableData",dbColumnList.ogunData.TABLE_NAME);
                     intent.putExtra("FileData",dbColumnList.ogunFile.TABLE_NAME);
+                    intent.putExtra("acivity","ogunFavourite");
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
                 }
