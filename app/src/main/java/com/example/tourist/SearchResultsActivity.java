@@ -22,7 +22,7 @@ import java.util.List;
 
 public class SearchResultsActivity extends AppCompatActivity implements  SearchView.OnQueryTextListener {
     String tableName;
-    List<myModels.contentModel> contentData, newList;
+    List<myModels.contentModel> contentData, newRecord;
     RecyclerView recyclerView;
     private contentAdapter contentAdapter;
     dbHelper dbHelper;
@@ -35,6 +35,7 @@ public class SearchResultsActivity extends AppCompatActivity implements  SearchV
         tableName = getIntent().getStringExtra("tableName");
 
         contentData = new ArrayList<>();
+        newRecord = new ArrayList<>();
 
         String state = tableName.equals("oyo_data")? "Search Oyo State.":"Search Ogun State.";
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -96,6 +97,58 @@ public class SearchResultsActivity extends AppCompatActivity implements  SearchV
         }
         @Override
         protected void onPostExecute(String s) {
+            newRecord = contentData;
+            contentAdapter = new contentAdapter(newRecord, getApplicationContext(), new contentAdapter.OnItemClickListener() {
+                @Override
+                public void onVisitedClick(View v, int position) {
+                    ImageButton visited = (ImageButton)v;
+                    String postid =  newRecord.get(position).getRecordId();
+                    String placevisit =  newRecord.get(position).getTitle();
+                    if(newRecord.get(position).getTravel().equals("1")){
+                        visited.setBackgroundResource(R.drawable.circle);
+                        dbHelper.DeleteVisited(postid,dbColumnList.ogunData.TABLE_NAME);
+                        newRecord.get(position).setTravel("0");
+                        Toast.makeText(getApplicationContext(),  "Removed " +placevisit +" From Visited" ,Toast.LENGTH_SHORT).show();
+                    }else{
+                        visited.setBackgroundResource(R.drawable.circleselected);
+                        dbHelper.UpdateVisited(postid,dbColumnList.ogunData.TABLE_NAME);
+                        newRecord.get(position).setTravel("1");
+                        Toast.makeText(getApplicationContext(),  "Added " +placevisit +" To Visited" ,Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFavouriteClick(View v, int position) {
+                    ImageButton favourite = (ImageButton)v;
+                    String postid =  newRecord.get(position).getRecordId();
+                    String placevisit =  newRecord.get(position).getTitle();
+                    if(newRecord.get(position).getFavourite().equals("1")){
+                        favourite.setBackgroundResource(R.drawable.circle);
+                        dbHelper.DeleteFavourite(postid,dbColumnList.ogunData.TABLE_NAME);
+                        newRecord.get(position).setFavourite("0");
+                        Toast.makeText(getApplicationContext(),  "Removed " +placevisit +" From Favourite" ,Toast.LENGTH_SHORT).show();
+                    }else{
+                        favourite.setBackgroundResource(R.drawable.circleselected);
+                        dbHelper.UpdateFavourite(postid,dbColumnList.ogunData.TABLE_NAME);
+                        newRecord.get(position).setFavourite("1");
+                        Toast.makeText(getApplicationContext(),  "Added " +placevisit +" To Favourite" ,Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onImageClick(View v, int position) {
+                    String postid =  newRecord.get(position).getRecordId();
+//                    Toast.makeText(getContext(), postid + " Favourite",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), viewContent.class);
+                    intent.putExtra("tipsId",postid);
+                    intent.putExtra("tableData",dbColumnList.ogunData.TABLE_NAME);
+                    intent.putExtra("FileData",dbColumnList.ogunFile.TABLE_NAME);
+                    intent.putExtra("acivity","search");
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                }
+            });
+            contentAdapter.notifyDataSetChanged();
             super.onPostExecute(s);
         }
     }
@@ -109,7 +162,8 @@ public class SearchResultsActivity extends AppCompatActivity implements  SearchV
 
     @Override
     public boolean onQueryTextChange(String textData){
-        newList = new ArrayList<>();
+        ArrayList<myModels.contentModel> newList = new ArrayList<>();
+        newRecord = new ArrayList<>();
         String newText = textData.toLowerCase();
         for(myModels.contentModel cont : contentData){
             String name_ = cont.getTitle().toLowerCase();
@@ -119,56 +173,14 @@ public class SearchResultsActivity extends AppCompatActivity implements  SearchV
                 newList.add(cont);
             }
         }
-        contentAdapter = new contentAdapter(newList, getApplicationContext(), new contentAdapter.OnItemClickListener() {
-            @Override
-            public void onVisitedClick(View v, int position) {
-                ImageButton visited = (ImageButton)v;
-                String postid =  contentData.get(position).getRecordId();
-                String placevisit =  contentData.get(position).getTitle();
-                if(contentData.get(position).getTravel().equals("1")){
-                    visited.setBackgroundResource(R.drawable.circle);
-                    dbHelper.DeleteVisited(postid,dbColumnList.ogunData.TABLE_NAME);
-                    contentData.get(position).setTravel("0");
-                    Toast.makeText(getApplicationContext(),  "Removed " +placevisit +" From Visited" ,Toast.LENGTH_SHORT).show();
-                }else{
-                    visited.setBackgroundResource(R.drawable.circleselected);
-                    dbHelper.UpdateVisited(postid,dbColumnList.ogunData.TABLE_NAME);
-                    contentData.get(position).setTravel("1");
-                    Toast.makeText(getApplicationContext(),  "Added " +placevisit +" To Visited" ,Toast.LENGTH_SHORT).show();
-                }
-            }
+        if(!textData.isEmpty()){
+            newRecord = newList;
+        }else{
+            newRecord = contentData;
+        }
 
-            @Override
-            public void onFavouriteClick(View v, int position) {
-                ImageButton favourite = (ImageButton)v;
-                String postid =  contentData.get(position).getRecordId();
-                String placevisit =  contentData.get(position).getTitle();
-                if(contentData.get(position).getFavourite().equals("1")){
-                    favourite.setBackgroundResource(R.drawable.circle);
-                    dbHelper.DeleteFavourite(postid,dbColumnList.ogunData.TABLE_NAME);
-                    contentData.get(position).setFavourite("0");
-                    Toast.makeText(getApplicationContext(),  "Removed " +placevisit +" From Favourite" ,Toast.LENGTH_SHORT).show();
-                }else{
-                    favourite.setBackgroundResource(R.drawable.circleselected);
-                    dbHelper.UpdateFavourite(postid,dbColumnList.ogunData.TABLE_NAME);
-                    contentData.get(position).setFavourite("1");
-                    Toast.makeText(getApplicationContext(),  "Added " +placevisit +" To Favourite" ,Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onImageClick(View v, int position) {
-                String postid =  contentData.get(position).getRecordId();
-//                    Toast.makeText(getContext(), postid + " Favourite",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), viewContent.class);
-                intent.putExtra("tipsId",postid);
-                intent.putExtra("tableData",dbColumnList.ogunData.TABLE_NAME);
-                intent.putExtra("FileData",dbColumnList.ogunFile.TABLE_NAME);
-                intent.putExtra("acivity","search");
-                startActivity(intent);
-                overridePendingTransition(R.anim.right_in, R.anim.left_out);
-            }
-        });
+        contentAdapter.setFilter(newList);
+//        contentAdapter.getFilter().filter(textData);
         contentAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(contentAdapter);
         return true;
@@ -178,15 +190,16 @@ public class SearchResultsActivity extends AppCompatActivity implements  SearchV
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if(tableName.equals("oyo_data")){
-                    Intent intent = new Intent(this, OyoHome.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent(this, OgunHome.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }
+//                if(tableName.equals("oyo_data")){
+//                    Intent intent = new Intent(this, OyoHome.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                }else{
+//                    Intent intent = new Intent(this, OgunHome.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                }
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

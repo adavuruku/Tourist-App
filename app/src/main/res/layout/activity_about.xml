@@ -75,7 +75,7 @@
                     android:id="@+id/card_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:alpha="0.8"
+                    android:alpha="0.9"
                     app:cardElevation="5dp"
                     android:layout_marginBottom="3dp"
                     card_view:cardBackgroundColor="@android:color/white">
@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     app:cardElevation="5dp"
                     android:layout_marginBottom="3dp"
-                    android:alpha="0.8"
+                    android:alpha="0.9"
                     card_view:cardBackgroundColor="@android:color/white">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -170,7 +170,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
                     app:cardElevation="5dp"
-                    android:alpha="0.8"
+                    android:alpha="0.9"
                     card_view:cardBackgroundColor="@android:color/white">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -213,7 +213,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
                     app:cardElevation="5dp"
-                    android:alpha="0.8"
+                    android:alpha="0.9"
                     app:layout_anchorGravity="bottom"
                     card_view:cardBackgroundColor="@android:color/white">
                     <LinearLayout
@@ -248,7 +248,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardElevation="5dp"
-                    android:alpha="0.8"
+                    android:alpha="0.9"
                     app:layout_anchorGravity="bottom"
                     >
                     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

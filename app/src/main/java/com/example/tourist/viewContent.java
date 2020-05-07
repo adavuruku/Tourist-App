@@ -199,39 +199,39 @@ public class viewContent extends AppCompatActivity  {
         switch (item.getItemId()) {
 
             case android.R.id.home:
-                Intent intent;
-                if (acivity.equals("oyoScreen")){
-                    intent = new Intent(this, OyoHome.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }else if (acivity.equals("ogunScreen")){
-                    intent = new Intent(this, OgunHome.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }else if (acivity.equals("ogunHome")){
-                    intent = new Intent(this, OgunHome.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }else if (acivity.equals("ogunFavourite")){
-                    intent = new Intent(this, OgunFavourite.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }else if (acivity.equals("oyoFavourite")){
-                    intent = new Intent(this, OyoFavourite.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }else{
-                    intent = new Intent(this, SearchResultsActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }
-
+//                Intent intent;
+//                if (acivity.equals("oyoScreen")){
+//                    intent = new Intent(this, OyoHome.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish();
+//                }else if (acivity.equals("ogunScreen")){
+//                    intent = new Intent(this, OgunHome.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish();
+//                }else if (acivity.equals("ogunHome")){
+//                    intent = new Intent(this, OgunHome.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish();
+//                }else if (acivity.equals("ogunFavourite")){
+//                    intent = new Intent(this, OgunFavourite.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish();
+//                }else if (acivity.equals("oyoFavourite")){
+//                    intent = new Intent(this, OyoFavourite.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish();
+//                }else{
+//                    intent = new Intent(this, SearchResultsActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish();
+//                }
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

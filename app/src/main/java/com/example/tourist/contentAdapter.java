@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,9 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class contentAdapter extends RecyclerView.Adapter<contentAdapter.RecyclerHolder>{
+public class contentAdapter extends RecyclerView.Adapter<contentAdapter.RecyclerHolder> implements Filterable{
     private LayoutInflater inflater;
     private List<myModels.contentModel> contacts;
+    private List<myModels.contentModel> contactListFiltered;
     private String stat;
     private Context activity;
     private  OnItemClickListener mlistener;
@@ -133,6 +136,41 @@ public class contentAdapter extends RecyclerView.Adapter<contentAdapter.Recycler
         contacts = new ArrayList<>();
         contacts.addAll(newList);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString().toLowerCase();
+                if (charString.isEmpty()) {
+                    contactListFiltered = contacts;
+                } else {
+                    List<myModels.contentModel> filteredList = new ArrayList<>();
+                    for (myModels.contentModel row : contacts) {
+                        String name_ = row.getTitle().toLowerCase();
+                        String depart_ = row.getContent().toLowerCase();
+                        String group = row.getContentGroup().toLowerCase();
+                        if(name_.contains(charString) || depart_.contains(charString)|| group.contains(charString)){
+                            filteredList.add(row);
+                        }
+                    }
+
+                    contactListFiltered = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = contactListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                contactListFiltered = (ArrayList<myModels.contentModel>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
 }

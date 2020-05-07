@@ -29,15 +29,7 @@ public class about extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if(tableName.equals("oyo_data")){
-                    Intent intent = new Intent(this, OyoHome.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent(this, OgunHome.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
