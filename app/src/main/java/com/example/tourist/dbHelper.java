@@ -232,4 +232,14 @@ public class dbHelper extends SQLiteOpenHelper {
         }
         return res;
     }
+
+    public Cursor loginUser(String email, String password){
+        String sql = "SELECT * FROM  usersRecord WHERE email = '" + email +"' AND password ='"+password+"' Limit 1";
+        return database.rawQuery(sql, null);
+    }
+
+    public Cursor getAUser(String email){
+        String sql = "SELECT * FROM  usersRecord WHERE email = '" + email +"' Limit 1";
+        return database.rawQuery(sql, null);
+    }
 }

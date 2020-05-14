@@ -21,6 +21,10 @@
                     android:id="@+id/visited"
                     android:icon="@drawable/ic_beenhere"
                     android:title="@string/visit" />
+                <item
+                    android:id="@+id/profile"
+                    android:icon="@drawable/ic_account_circle_24px"
+                    android:title="@string/profile" />
 
             </group>
         </menu>

@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         LoginUserEmail = this.getSharedPreferences("LoginUserEmail", this.MODE_PRIVATE);
         UserEmail= LoginUserEmail.getString("LoginUserEmail", "");
 

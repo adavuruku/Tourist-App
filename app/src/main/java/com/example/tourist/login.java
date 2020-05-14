@@ -1,6 +1,9 @@
 package com.example.tourist;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
@@ -31,12 +35,6 @@ public class login extends Fragment implements Validator.ValidationListener{
     @Length(min = 6)
     EditText passwordE;
 
-    @NotEmpty
-    @ConfirmPassword
-    EditText confirmPasswordE;
-
-    @NotEmpty
-    EditText fullnameE;
 
     @NotEmpty
     @Email
@@ -46,6 +44,8 @@ public class login extends Fragment implements Validator.ValidationListener{
     dbHelper dbHelper;
     Button submit;
     AlertDialog.Builder builder;
+    String email, password;
+    private SharedPreferences LoginUserEmail;
     public login() {
         // Required empty public constructor
     }
@@ -62,9 +62,24 @@ public class login extends Fragment implements Validator.ValidationListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         passwordE = rootView.findViewById(R.id.password);
-//        confirmPasswordE = rootView.findViewById(R.id.confirm);
         emailE = rootView.findViewById(R.id.email);
-//        fullnameE = rootView.findViewById(R.id.fullname);
+
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+
+        LoginUserEmail = getActivity().getSharedPreferences("LoginUserEmail", getActivity().MODE_PRIVATE);
+
+        submit = rootView.findViewById(R.id.login);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                email = emailE.getText().toString();
+                password = passwordE.getText().toString();
+
+                validator.validate();
+            }
+        });
         return rootView;
     }
 
@@ -87,7 +102,24 @@ public class login extends Fragment implements Validator.ValidationListener{
     }
     @Override
     public void onValidationSucceeded() {
+        dbHelper = new dbHelper(getActivity());
+        dbHelper.openDataBase();
+        Cursor curs = dbHelper.loginUser(email, password);
+        if(curs.getCount()>=1){
+            curs.moveToFirst();
+            SharedPreferences.Editor editor;
+            editor = LoginUserEmail.edit();
+            editor.putString("LoginUserEmail",email);
+            editor.apply();
 
+            Toast.makeText(getActivity(),"Welcome "+ curs.getString(curs.getColumnIndex("fullname")) + " To Tourist Guide - MOBILE APP",Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getActivity(),OgunHome.class);
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+            getActivity().finish();
+        }else{
+            displayMessage("Fail To Login Invalid Email Add. Or Password.!");
+        }
     }
 
     @Override

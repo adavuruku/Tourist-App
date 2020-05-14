@@ -20,5 +20,7 @@
     <string name="byreg">By registering, You are agreeing \nTo our Terms of Service</string>
     <string name="login">Login</string>
     <string name="register">REGISTER</string>
+    <string name="loading">Loading...</string>
+    <string name="profile">My Profile</string>
 
 </resources>
