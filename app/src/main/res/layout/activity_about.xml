@@ -260,8 +260,9 @@
                             android:id="@+id/s12"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Contact Me:"
-                            android:textColor="@color/colorText"
+                            android:text="CONTACT ME:"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorBlack"
                             android:layout_marginBottom="5dp"
                             android:fontFamily="sans-serif-medium"/>
                         <TextView

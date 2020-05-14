@@ -106,6 +106,15 @@ public class dbHelper extends SQLiteOpenHelper {
     }
 
 
+    public void createUserTable(){
+        String CREATE_TABLE_USERSRECORD = "CREATE TABLE IF NOT EXISTS usersRecord ( " +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "fullname VARCHAR, " +
+                "email VARCHAR, " +
+                "password VARCHAR )";
+        database.execSQL(CREATE_TABLE_USERSRECORD);
+
+    }
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
@@ -203,5 +212,24 @@ public class dbHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(dbColumnList.oyoData.COLUMN_RECORDCONTENT, recordContent);
         database.update(tableName, cv, dbColumnList.oyoData.COLUMN_RECORDID + " = ? ", new String[]{recordId});
+    }
+
+
+    public Cursor verifyUserExist(String email){
+        String sql = "SELECT * FROM  usersRecord WHERE email = '" + email +"' Limit 1";
+        return database.rawQuery(sql, null);
+    }
+    public boolean SaveUserInformation(String fullname, String email, String password){
+        boolean res = false;
+        ContentValues cv = new ContentValues();
+        cv.put("fullname", fullname);
+        cv.put("email", email);
+        cv.put("password", password);
+        Cursor cursor = verifyUserExist(email);
+        if(cursor.getCount() < 1) {
+            database.insert("usersRecord",null,cv);
+            res=true;
+        }
+        return res;
     }
 }

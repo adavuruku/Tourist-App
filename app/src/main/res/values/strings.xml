@@ -17,5 +17,8 @@
     <string name="getthere">GET THERE</string>
     <string name="call">CALL NOW</string>
     <string name="share">SHARE</string>
+    <string name="byreg">By registering, You are agreeing \nTo our Terms of Service</string>
+    <string name="login">Login</string>
+    <string name="register">REGISTER</string>
 
 </resources>
